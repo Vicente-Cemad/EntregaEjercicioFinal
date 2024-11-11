@@ -6,50 +6,89 @@ class Producto:
         self.__precio = precio
         self.__cantidad = cantidad
 
-        if len(nombre) <= 0 or nombre.strip() == "" or nombre.strip() == " ":
-            raise ValueError("Nombre no válido")
-        if len(categoria) <= 0 or categoria.strip() == "" or categoria.strip() == " ":
-            raise ValueError("Categoria no válida")
-        if precio <= 0:
-            raise ValueError("Precio debe ser mayor que 0")
-        if cantidad <= 0:
-            raise ValueError("Cantidad debe ser mayor que 0")
+    def validar_nombre(self, nombre):
+        #Nombre
+        try:
+            if len(nombre) <= 0:
+                print('Nombre no puede dejarse vacío')
+                raise ValueError("Nombre no válido")
+            elif nombre.strip() == "":
+                print('Nombre no puede dejarse vacío')
+                raise ValueError("Nombre no válido")
+            elif nombre.strip() == " ":
+                print('Nombre no puede ser blancos')
+                raise ValueError("Nombre no válido")
+            else:
+                print('Nombre correcto')
+        except:
+            print('Volver al menú')
+
+    def validar_categoria(self, categoria):
+        #Categoría
+        try:
+            if len(categoria) <= 0:
+                print('Categoría no puede dejarse vacío')
+                raise ValueError("Categoría no válida")
+            elif categoria.strip() == "":
+                print('Categoría no puede dejarse vacío')
+                raise ValueError("Categoría no válida")
+            elif categoria.strip() == " ":
+                print('Categoría no puede ser blancos')
+                raise ValueError("Categoría no válida")
+            else:
+                print('Categoría correcta')
+        except:
+            print('Volver al menú')
+
+    def validar_precio(self, precio):
+        #Precio
+        try:
+            if precio <= 0:
+                print('Precio debe ser mayor que 0')
+                raise ValueError("Precio debe ser mayor que 0")
+            else:
+                print('Precio correcto')
+        except:
+            print('Volver al menú')
+
+    def validar_cantidad(self, cantidad):
+        #Cantidad
+        try:
+            if cantidad <= 0:
+                print('Cantidad debe ser mayor que 0')
+                raise ValueError("Cantidad debe ser mayor que 0")
+            else:
+                print('Cantidad correcta')
+        except:
+            print('Volver al menú')
 
     def get_nombre(self):
         return self.__nombre
 
     def set_nombre(self, nombre):
-        if len(nombre) <= 0 or nombre.strip() == "" or nombre.strip() == " ":
-            raise ValueError("Nombre no válido")
-        else:
-            self.__nombre = nombre
+        self.validar_nombre(nombre)
+        self.__nombre = nombre
         
     def get_categoria(self):
         return self.__categoria
 
     def set_categoria(self, categoria):
-        if len(categoria) <= 0 or categoria.strip() == "" or categoria.strip() == " ":
-            raise ValueError("Categoria no válido")
-        else:
-            self.__categoria = categoria
+        self.validar_categoria(categoria)
+        self.__categoria = categoria
 
     def get_precio(self):
         return self.__precio
 
     def set_precio(self, precio):
-        if precio <= 0:
-            raise ValueError("Precio debe ser mayor que 0")
-        else:
-            self.__precio = precio
+        self.validar_precio(precio)
+        self.__precio = precio
 
     def get_cantidad(self):
         return self.__cantidad
 
     def set_cantidad(self, cantidad):
-        if cantidad <= 0:
-            raise ValueError("Cantidad debe ser mayor 0")
-        else:
-            self.__cantidad = cantidad
+        self.validar_cantidad(cantidad)
+        self.__cantidad = cantidad
 
     def __str__(self):
         return f"Producto(nombre={self.__nombre}, categoria={self.__categoria}, precio={self.__precio}, cantidad={self.__cantidad})"
@@ -66,7 +105,8 @@ class Inventario:
         for producto in self.__productos:
             if producto.get_nombre() == nombre:
                 return producto
-        return None
+        print('No existe el producto')
+        raise ValueError("No existe el producto")
 
     def actualizar_producto(self, producto):
         nombre = input("Nombre del producto: ")
@@ -112,38 +152,70 @@ def menu():
     print("6. Salir")
 
 def opciones():
-    opcion = input("Seleccione una opción: ")
 
-    if opcion == "1":
-        nombre = input("Nombre del producto: ")
-        categoria = input("Categoría del producto: ")
-        precio = float(input("Precio del producto: "))
-        cantidad = int(input("Cantidad en stock: "))
+    producto = Producto(nombre=None, categoria=None, precio=None, cantidad=None)
+    inventario = Inventario()
 
-    elif opcion == "2":
-        nombre = input("Nombre del producto a actualizar: ")
-        categoria = input("Nueva categoria del producto: ")
-        precio = float(input("Nuevo precio del producto: "))
-        cantidad = int(input("Nueva cantidad en stock: "))
+    while True:
+        menu()
+        opcion = input("Seleccione una opción: ")
 
-    elif opcion == "3":
-        nombre = input("Nombre del producto a eliminar: ")
+        if opcion == "1":
+            nombre = input("Nombre del producto: ")
+            producto.set_nombre(nombre)
+            categoria = input("Categoría del producto: ")
+            producto.set_categoria(categoria)
+            try:
+                precio = float(input("Precio del producto: "))
+                producto.set_precio(precio)
+            except:
+                print('Debe ser númerico con o sin decimales')
+            try:
+                cantidad = int(input("Cantidad en stock: "))
+                producto.set_cantidad(cantidad)
+            except:
+                print('Debe ser númerico y entero')
+            
+            print(producto)
 
-    elif opcion == "4":
-        inventario.mostrar_inventario()
+        elif opcion == "2":
+            nombre = input("Nombre del producto a actualizar: ")
+            producto = inventario.buscar_producto(nombre)
+            categoria = input("Nueva categoría del producto: ")
+            producto.set_categoria(categoria)
+            try:
+                precio = float(input("Nuevo precio del producto: "))
+                producto.set_precio(precio)
+            except:
+                print('Debe ser númerico con o sin decimales')
+            try:
+                cantidad = int(input("Nueva cantidad en stock: "))
+                producto.set_cantidad(cantidad)
+            except:
+                print('Debe ser númerico y entero')
+            
+            print(producto)
+            return producto
+            nombre = input("Nombre del producto a actualizar: ")
+            categoria = input("Nueva categoria del producto: ")
+            precio = float(input("Nuevo precio del producto: "))
+            cantidad = int(input("Nueva cantidad en stock: "))
 
-    elif opcion == "5":
-        nombre = input("Nombre del producto a buscar: ")
-        producto = inventario.buscar_producto(nombre)
+        elif opcion == "3":
+            nombre = input("Nombre del producto a eliminar: ")
 
-    elif opcion == "6":
-        print("Saliendo del programa.")
+        elif opcion == "4":
+            inventario.mostrar_inventario()
 
-    else:
-        print("Opción no válida. Por favor, seleccione una opción del 1 al 6.")
+        elif opcion == "5":
+            nombre = input("Nombre del producto a buscar: ")
+            producto = inventario.buscar_producto(nombre)
 
-inventario = Inventario()
+        elif opcion == "6":
+            print("Saliendo del programa.")
+            break
 
-menu()
+        else:
+            print("Opción no válida. Por favor, seleccione una opción del 1 al 6.")
 
 opciones()
