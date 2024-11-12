@@ -125,8 +125,10 @@ class Inventario:
                 if producto.get_nombre() == nombre:
                     print(producto)
                     return producto
+            producto = False
             print('No existe el producto')
-            raise ValueError('No existe el producto')
+            return producto
+            #raise ValueError('No existe el producto')
 
     def actualizar_producto(self, productoA, productoN):
         try:
@@ -139,17 +141,23 @@ class Inventario:
 
         
     def eliminar_producto(self, nombre):
-        producto = self.buscar_producto(nombre)
-        if producto == None:
-            print('No hay productos en inventario')
-        else:
-            print(producto)
-            self.__productos.remove(producto)
+        try:
+            producto = self.buscar_producto(nombre)
+            if producto == False:
+                print('Introducir otro producto')
+            elif producto == None:
+                print('No hay productos en inventario')
+            else:
+                self.__productos.remove(producto)
+                print('Producto eliminado')
+        except:
+            print('Volver al menú')
+        
 
     def mostrar_producto(self):
         nombre = input("Nombre del producto a buscar: ")
         producto = None
-        self.buscar_producto(nombre)
+        producto = self.buscar_producto(nombre)
         if producto == None:
             print('No hay productos en el inventario')
 
@@ -170,7 +178,7 @@ def menu():
     print("5. Buscar producto")
     print("6. Salir")
 
-def opciones():
+def main():
 
     producto = Producto(nombre=None, categoria=None, precio=None, cantidad=None)
     inventario = Inventario()
@@ -212,32 +220,36 @@ def opciones():
             try:
                 nombre = input("Nombre del producto a actualizar: ")
                 productoA = inventario.buscar_producto(nombre)
-                if productoA == None:
-                    print('No hay productos en inventario')
-                    raise ValueError('No hay productos en inventario')
-                try:
-                    categoria = input("Mantener o modificar categoría del producto: ")
-                    producto.validar_categoria(categoria)
-                    try:
-                        precio = float(input("Mantener o modificar precio del producto: "))
-                        producto.validar_precio(precio)
-                    except:
-                        print('Debe ser númerico con o sin decimales')
-                        #Volver al menú
-                    else:
-                        try:
-                            cantidad = int(input("Mantener o modificar cantidad del producto: "))
-                            producto.validar_cantidad(cantidad)
-                        except:
-                            print('Debe ser númerico y entero')
-                            #Volver al menú
-                        else:
-                            productoN = Producto(nombre, categoria, precio, cantidad)
-                            print(productoN)
-                            inventario.actualizar_producto(productoA, productoN)
-                except:
+                if productoA == False:
                     #Volver al menú
                     print('Volver al menú')
+                elif productoA == None:
+                    print('No hay productos en inventario')
+                    #raise ValueError('No hay productos en inventario')
+                else:
+                    try:
+                        categoria = input("Mantener o modificar categoría del producto: ")
+                        producto.validar_categoria(categoria)
+                        try:
+                            precio = float(input("Mantener o modificar precio del producto: "))
+                            producto.validar_precio(precio)
+                        except:
+                            print('Debe ser númerico con o sin decimales')
+                            #Volver al menú
+                        else:
+                            try:
+                                cantidad = int(input("Mantener o modificar cantidad del producto: "))
+                                producto.validar_cantidad(cantidad)
+                            except:
+                                print('Debe ser númerico y entero')
+                                #Volver al menú
+                            else:
+                                productoN = Producto(nombre, categoria, precio, cantidad)
+                                print(productoN)
+                                inventario.actualizar_producto(productoA, productoN)
+                    except:
+                        #Volver al menú
+                        print('Volver al menú')
             except:
                 #Volver al menú
                 print('Volver al menú')
@@ -259,4 +271,5 @@ def opciones():
         else:
             print("Opción no válida. Por favor, seleccione una opción del 1 al 6.")
 
-opciones()
+if __name__ == "__main__":
+    main()
