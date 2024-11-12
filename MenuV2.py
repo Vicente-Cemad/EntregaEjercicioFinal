@@ -129,7 +129,6 @@ class Inventario:
             indice = self.__productos.index(productoA)
             self.__productos.insert(indice, productoN)
             self.__productos.remove(productoA)
-            #self.__productos.sort()
         except:
             print('ERROR, en actualización')
             raise ValueError('ERROR, en actualización')
