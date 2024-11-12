@@ -1,3 +1,6 @@
+#Curso IBM SkillBuild 2024
+#Script Python
+#Vicente Medina Prados
 
 class Producto:
     def __init__(self, nombre, categoria, precio, cantidad):
