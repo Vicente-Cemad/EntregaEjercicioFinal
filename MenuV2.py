@@ -18,10 +18,13 @@ class Producto:
             elif nombre.strip() == " ":
                 print('Nombre no puede ser blancos')
                 raise ValueError("Nombre no válido")
+            elif nombre.isnumeric():
+                print('Nombre no puede ser numérico')
+                raise ValueError('Nombre no puede ser numérico')
             else:
                 print('Nombre correcto')
         except:
-            print('Volver al menú')
+            raise ValueError('Volver al menú')
 
     def validar_categoria(self, categoria):
         #Categoría
@@ -35,10 +38,13 @@ class Producto:
             elif categoria.strip() == " ":
                 print('Categoría no puede ser blancos')
                 raise ValueError("Categoría no válida")
+            elif categoria.isnumeric():
+                print('Categoria no puede ser numérico')
+                raise ValueError('Categoria no puede ser numérico')
             else:
                 print('Categoría correcta')
         except:
-            print('Volver al menú')
+            raise ValueError('Volver al menú')
 
     def validar_precio(self, precio):
         #Precio
@@ -49,7 +55,7 @@ class Producto:
             else:
                 print('Precio correcto')
         except:
-            print('Volver al menú')
+            raise ValueError('Volver al menú')
 
     def validar_cantidad(self, cantidad):
         #Cantidad
@@ -60,7 +66,7 @@ class Producto:
             else:
                 print('Cantidad correcta')
         except:
-            print('Volver al menú')
+            raise ValueError('Volver al menú')
 
     def get_nombre(self):
         return self.__nombre
@@ -98,49 +104,53 @@ class Inventario:
     def __init__(self):
         self.__productos = []
 
-    def agregar_producto(self, producto):
+    def agregar_producto(self, nombre, producto):
+        for producto2 in self.__productos:
+            if producto2.get_nombre() == nombre:
+                print('Nombre de producto duplicado. ¿Actualizar o eliminar?')
+                return producto2
         self.__productos.append(producto)
+        print('Producto añadido')
 
     def buscar_producto(self, nombre):
-        for producto in self.__productos:
-            if producto.get_nombre() == nombre:
-                return producto
-        print('No existe el producto')
-        raise ValueError("No existe el producto")
+        if not self.__productos:
+            print('No hay productos en inventario')
+            raise ValueError('No hay productos en inventario')
+        else:
+            for producto in self.__productos:
+                if producto.get_nombre() == nombre:
+                    print(producto)
+                    return producto
+            print('No existe el producto')
+            raise ValueError('No existe el producto')
 
-    def actualizar_producto(self, producto):
-        nombre = input("Nombre del producto: ")
-        if len(nombre) <= 0 or nombre.strip() == "" or nombre.strip() == " ":
-            print("Nombre no válido")
+    def actualizar_producto(self, productoA, productoN):
+        try:
+            indice = self.__productos.index(productoA)
+            self.__productos.insert(indice, productoN)
+            self.__productos.remove(productoA)
+            #self.__productos.sort()
+        except:
+            print('ERROR, en actualización')
+            raise ValueError('ERROR, en actualización')
 
-        categoria = input("Categoría del producto: ")
-        if len(categoria) <= 0 or categoria.strip() == "" or categoria.strip() == " ":
-            print("Categoria no válida")
-
-        precio = float(input("Precio del producto: "))
-        if precio <= 0:
-            print("Precio debe ser mayor que 0")
-
-        cantidad = int(input("Cantidad en stock: "))
-        if cantidad <= 0:
-            print("Cantidad debe ser mayor que 0")
-
-        producto.set_nombre(nombre)
-        producto.set_categoria(categoria)
-        producto.set_precio(precio)
-        producto.set_cantidad(cantidad)
-        return producto
         
     def eliminar_producto(self, nombre):
         producto = self.buscar_producto(nombre)
+        print(producto)
         self.__productos.remove(producto)
 
     def mostrar_producto(self):
-        print(producto)
+        nombre = input("Nombre del producto a buscar: ")
+        self.buscar_producto(nombre)
 
     def mostrar_inventario(self):
-        for producto in self.__productos:
-            print(producto)
+        if not self.__productos:
+            print('No hay productos en inventario')
+        else:
+            for producto in self.__productos:
+                print(producto)
+
 
 def menu():
     print("\nGestión de Inventario")
@@ -157,62 +167,81 @@ def opciones():
     inventario = Inventario()
 
     while True:
+        
         menu()
+
         opcion = input("Seleccione una opción: ")
 
         if opcion == "1":
-            nombre = input("Nombre del producto: ")
-            producto.set_nombre(nombre)
-            categoria = input("Categoría del producto: ")
-            producto.set_categoria(categoria)
             try:
-                precio = float(input("Precio del producto: "))
-                producto.set_precio(precio)
+                nombre = input("Nombre del producto: ")
+                producto.validar_nombre(nombre)
+                categoria = input("Categoría del producto: ")
+                producto.validar_categoria(categoria)
+                try:
+                    precio = float(input("Precio del producto: "))
+                    producto.validar_precio(precio)
+                except:
+                    print('Debe ser númerico con o sin decimales')
+                    #Volver al menú
+                else:
+                    try:
+                        cantidad = int(input("Cantidad en stock: "))
+                        producto.validar_cantidad(cantidad)
+                    except:
+                        print('Debe ser númerico y entero')
+                        #Volver al menú
+                    else:
+                        producto = Producto(nombre, categoria, precio, cantidad)
+                        print(producto)
+                        inventario.agregar_producto(nombre, producto)
             except:
-                print('Debe ser númerico con o sin decimales')
-            try:
-                cantidad = int(input("Cantidad en stock: "))
-                producto.set_cantidad(cantidad)
-            except:
-                print('Debe ser númerico y entero')
-            
-            print(producto)
+                #Volver al menú
+                print('Volver al menú')
 
         elif opcion == "2":
-            nombre = input("Nombre del producto a actualizar: ")
-            producto = inventario.buscar_producto(nombre)
-            categoria = input("Nueva categoría del producto: ")
-            producto.set_categoria(categoria)
             try:
-                precio = float(input("Nuevo precio del producto: "))
-                producto.set_precio(precio)
+                nombre = input("Nombre del producto a actualizar: ")
+                productoA = inventario.buscar_producto(nombre)
+                try:
+                    categoria = input("Mantener o modificar categoría del producto: ")
+                    producto.validar_categoria(categoria)
+                    try:
+                        precio = float(input("Mantener o modificar precio del producto: "))
+                        producto.validar_precio(precio)
+                    except:
+                        print('Debe ser númerico con o sin decimales')
+                        #Volver al menú
+                    else:
+                        try:
+                            cantidad = int(input("Mantener o modificar cantidad del producto: "))
+                            producto.validar_cantidad(cantidad)
+                        except:
+                            print('Debe ser númerico y entero')
+                            #Volver al menú
+                        else:
+                            productoN = Producto(nombre, categoria, precio, cantidad)
+                            print(productoN)
+                            inventario.actualizar_producto(productoA, productoN)
+                except:
+                    #Volver al menú
+                    print('Volver al menú')
             except:
-                print('Debe ser númerico con o sin decimales')
-            try:
-                cantidad = int(input("Nueva cantidad en stock: "))
-                producto.set_cantidad(cantidad)
-            except:
-                print('Debe ser númerico y entero')
-            
-            print(producto)
-            return producto
-            nombre = input("Nombre del producto a actualizar: ")
-            categoria = input("Nueva categoria del producto: ")
-            precio = float(input("Nuevo precio del producto: "))
-            cantidad = int(input("Nueva cantidad en stock: "))
+                #Volver al menú
+                print('Volver al menú')
 
         elif opcion == "3":
             nombre = input("Nombre del producto a eliminar: ")
+            inventario.eliminar_producto(nombre)
 
         elif opcion == "4":
             inventario.mostrar_inventario()
 
         elif opcion == "5":
-            nombre = input("Nombre del producto a buscar: ")
-            producto = inventario.buscar_producto(nombre)
+            inventario.mostrar_producto()
 
         elif opcion == "6":
-            print("Saliendo del programa.")
+            print("Saliendo del programa")
             break
 
         else:
