@@ -1,6 +1,7 @@
 #Curso IBM SkillBuild 2024
 #Script Python
 #Vicente Medina Prados
+#Empleando una lista - sin persistencia
 
 class Producto:
     def __init__(self, nombre, categoria, precio, cantidad):
@@ -11,23 +12,21 @@ class Producto:
 
     def validar_nombre(self, nombre):
         #Nombre
-        try:
-            if len(nombre) <= 0:
-                print('Nombre no puede dejarse vacío')
-                raise ValueError("Nombre no válido")
-            elif nombre.strip() == "":
-                print('Nombre no puede dejarse vacío')
-                raise ValueError("Nombre no válido")
-            elif nombre.strip() == " ":
-                print('Nombre no puede ser blancos')
-                raise ValueError("Nombre no válido")
-            elif nombre.isnumeric():
-                print('Nombre no puede ser numérico')
-                raise ValueError('Nombre no puede ser numérico')
-            else:
-                print('Nombre correcto')
-        except:
-            raise ValueError('Volver al menú')
+
+        if len(nombre) <= 0:
+            print('Nombre no puede dejarse vacío')
+
+        elif nombre.strip() == "":
+            print('Nombre no puede dejarse vacío')
+
+        elif nombre.strip() == " ":
+            print('Nombre no puede ser blancos')
+
+        elif nombre.isnumeric():
+            print('Nombre no puede ser numérico')
+
+        else:
+            print('Nombre correcto')
 
     def validar_categoria(self, categoria):
         #Categoría
