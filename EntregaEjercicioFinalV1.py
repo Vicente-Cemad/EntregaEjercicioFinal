@@ -1,6 +1,7 @@
 #Curso IBM SkillBuild 2024
 #Script Python
 #Vicente Medina Prados
+#Empleando una lista
 
 class Producto:
     def __init__(self, nombre, categoria, precio, cantidad):
