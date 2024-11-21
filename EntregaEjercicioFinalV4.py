@@ -107,66 +107,68 @@ class Producto():
 class Inventario():
 
     def __init__(self):
-        #self.__clave = clave
-        #self.__articulo = articulo
-        #self.__articuloB = articuloB
         self.__lista = []
 
-    def crear_lista(self):
-        self.__lista.append(None)
-
-    def agregar_producto(self, clave, articulo):
+    def existe_producto(self, nombre):
         try:
-            #print(self.__productos)
-            for producto in self.__lista:
-                #print (producto2)
-                if producto.get_nombre() == clave:
-                    print('Nombre de producto duplicado. ¿Actualizar o eliminar?')
-                    return producto
-            #print(articulo)
-            self.__lista.append(articulo)
+            for X in self.__lista:
+                if X.get_nombre() == nombre:
+                    #print('Nombre de producto duplicado. ¿Actualizar o eliminar?')
+                    return X
+        except:
+            print ('ERROR NO ESPERADO EN EXISTE PRODUCTO')            
+            raise ValueError('ERROR NO ESPERADO EN EXISTE PRODUCTO')           
+
+    def agregar_producto(self, producto):
+        try:
+            #for X in self.__lista:
+            #    if X.get_nombre() == nombre:
+            #        print('Nombre de producto duplicado. ¿Actualizar o eliminar?')
+            #        return X
+            #self.existe_producto(nombre)
+            self.__lista.append(producto)
             print('Producto añadido')
         except:
             print ('ERROR NO ESPERADO EN INSERCIÓN DE PRODUCTO')            
             raise ValueError('ERROR NO ESPERADO EN INSERCIÓN DE PRODUCTO') 
 
-    def buscar_producto(self):
+    def buscar_producto(self, nombre):
         try:
             if not self.__lista:
-                self.__articulo = None
-                return self.__articulo
+                X = None
+                return X
             else:
-                for producto in self.__productos:
-                    if producto.get_nombre() == self.__clave:
-                        print(producto)
-                        return producto
-                self.__articulo = False
+                for X in self.__lista:
+                    if X.get_nombre() == nombre:
+                        print(X)
+                        return X
+                X = False
                 print('No existe el producto')
-                return self.__articulo
+                return X
         except:
             print ('ERROR NO ESPERADO EN BUSQUEDA POR NOMBRE')            
             raise ValueError('ERROR NO ESPERADO EN BUSQUEDA POR NOMBRE') 
     
 
-    def actualizar_producto(self):
+    def actualizar_producto(self, producto, productoB):
         try:
-            indice = self.__lista.index(self.__articulo)
-            self.__productos.insert(indice, self.__articuloB)
-            self.__productos.remove(self.__articulo)
+            indice = self.__lista.index(producto)
+            self.__lista.insert(indice, productoB)
+            self.__lista.remove(producto)
         except:
             print ('ERROR NO ESPERADO EN ACTUALIZACIÓN DE PRODUCTO')            
             raise ValueError('ERROR NO ESPERADO EN ACTUALIZACIÓN DE PRODUCTO') 
 
         
-    def eliminar_producto(self):
+    def eliminar_producto(self, nombre):
         try:
-            producto = self.buscar_producto(self.__clave)
+            producto = self.buscar_producto(nombre)
             if producto == False:
                 print('Introducir otro producto')
             elif producto == None:
                 print('No hay productos en inventario')
             else:
-                self.__lista.remove(self.__articulo)
+                self.__lista.remove(producto)
                 print('Producto eliminado')
         except:
             print ('ERROR NO ESPERADO EN ELIMINACIÓN DE PRODUCTO')            
@@ -175,9 +177,8 @@ class Inventario():
 
     def mostrar_producto(self):
         try:
-            self.__clave = input("Nombre del producto a buscar: ")
-            #producto = None
-            producto = self.buscar_producto()
+            nombre = input("Nombre del producto a buscar: ")
+            producto = self.buscar_producto(nombre)
             if producto == None:
                 print('No hay productos en el inventario')
         except:
@@ -187,16 +188,16 @@ class Inventario():
     def mostrar_inventario(self):
         try:
             if not self.__lista:
-                print('No hay productos en inventario')
+                print('No hay lista en inventario')
             else:
-                for producto in self.__lista:
-                    print(producto)
+                for X in self.__lista:
+                    print(X)
         except:
             print ('ERROR NO ESPERADO EN MOSTRAR INVENTARIO')            
             raise ValueError('ERROR NO ESPERADO EN MOSTRAR INVENTARIO') 
 
     def __str__(self):
-        return f"Inventario(nombre={self.__clave}, producto={self.__articulo})"
+        return f"Inventario(nombre={self.__nombre}, producto={self.__producto})"
 
 def menu():
     print("\nGestión de Inventario")
@@ -209,9 +210,7 @@ def menu():
 
 def main():
 
-    #producto = Producto(None, None, None, None)
     inventario = Inventario()
-    #inventario.crear_lista()
 
     while True:
         
@@ -225,12 +224,17 @@ def main():
                 nombre = input("Nombre del producto: ")
                 producto = Producto(nombre, None, None, None)
                 producto.validar_nombre()
+                X = None
+                X = inventario.existe_producto(nombre)
+                if X != None:
+                    print('Nombre de producto duplicado. ¿Actualizar o eliminar?')
+                    raise ValueError('Nombre de producto duplicado. ¿Actualizar o eliminar?')
                 categoria = input("Categoría del producto: ")
-                producto = Producto(nombre, categoria, None, None)
+                producto.set_categoria(categoria)
                 producto.validar_categoria()
                 try:
                     precio = float(input("Precio del producto: "))
-                    producto = Producto(nombre, categoria, precio, None)
+                    producto.set_precio(precio)
                     producto.validar_precio()
                 except:
                     print('Debe ser númerico con o sin decimales')
@@ -238,21 +242,14 @@ def main():
                 else:
                     try:
                         cantidad = int(input("Cantidad en inventario: "))
-                        producto = Producto(nombre, categoria, precio, cantidad)
+                        producto.set_cantidad(cantidad)
                         producto.validar_cantidad()
                     except:
                         print('Debe ser númerico y entero')
                         #Volviendo a Menú
                     else:
-                        #clave = nombre
-                        #articulo = producto
-                        #articuloB = None
-                        #inventario = Inventario(clave, articulo, articuloB)
-                        #producto = Producto(nombre, categoria, precio, cantidad)
-                        #inventario = Inventario(clave, producto)
                         print(producto)
-                        #print(inventario)
-                        inventario.agregar_producto(nombre, producto)
+                        inventario.agregar_producto(producto)
             except:
                 #Volviendo a Menú
                 print('Volviendo a Menú')
@@ -260,34 +257,36 @@ def main():
         elif opcion == "2":
             try:
                 nombre = input("Nombre del producto a actualizar: ")
-                productoA = inventario.buscar_producto(nombre)
-                if productoA == False:
+                producto = inventario.buscar_producto(nombre)
+                if producto == False:
                     #Volviendo a Menú
                     print('Volviendo a Menú')
-                elif productoA == None:
+                elif producto == None:
                     print('No hay productos en inventario')
-                    #raise ValueError('No hay productos en inventario')
+                    raise ValueError('No hay lista en inventario')
                 else:
                     try:
                         categoria = input("Mantener o modificar categoría del producto: ")
-                        producto.validar_categoria(categoria)
+                        productoB = Producto(nombre, categoria, None, None)
+                        productoB.validar_categoria()
                         try:
                             precio = float(input("Mantener o modificar precio del producto: "))
-                            producto.validar_precio(precio)
+                            productoB.set_precio(precio)
+                            productoB.validar_precio()
                         except:
                             print('Debe ser númerico con o sin decimales')
                             #Volviendo a Menú
                         else:
                             try:
                                 cantidad = int(input("Mantener o modificar cantidad del producto: "))
-                                producto.validar_cantidad(cantidad)
+                                productoB.set_cantidad(cantidad)
+                                productoB.validar_cantidad()
                             except:
                                 print('Debe ser númerico y entero')
                                 #Volviendo a Menú
                             else:
-                                productoN = Producto(nombre, categoria, precio, cantidad)
-                                print(productoN)
-                                inventario.actualizar_producto(productoA, productoN)
+                                print(productoB)
+                                inventario.actualizar_producto(producto, productoB)
                     except:
                         #Volviendo a Menú
                         print('Volviendo a Menú')
