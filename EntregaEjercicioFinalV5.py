@@ -1,7 +1,7 @@
-# https://github.com/Vicente-Cemad/EntregaEjercicioFinal
 #Curso IBM SkillBuild 2024
 #Script Python
 #Vicente Medina Prados
+# https://github.com/Vicente-Cemad/EntregaEjercicioFinal
 #Empleando una lista - sin persistencia
 
 class Producto():
@@ -66,9 +66,9 @@ class Producto():
     def validar_cantidad(self):
         #Cantidad
         try:
-            if self.__cantidad <= 0:
-                print('Cantidad debe ser mayor que 0')
-                raise ValueError("Cantidad debe ser mayor que 0")
+            if self.__cantidad < 0:
+                print('Cantidad debe ser mayor o igual que 0')
+                raise ValueError("Cantidad debe ser mayor o igual que 0")
             else:
                 print('Cantidad correcta')
         except:
@@ -122,11 +122,6 @@ class Inventario():
 
     def agregar_producto(self, producto):
         try:
-            #for X in self.__lista:
-            #    if X.get_nombre() == nombre:
-            #        print('Nombre de producto duplicado. ¿Actualizar o eliminar?')
-            #        return X
-            #self.existe_producto(nombre)
             self.__lista.append(producto)
             print('Producto añadido')
         except:
@@ -178,7 +173,8 @@ class Inventario():
 
     def mostrar_producto(self):
         try:
-            nombre = input("Nombre del producto a buscar: ")
+            nombreA = input("Nombre del producto a buscar: ")
+            nombre = nombreA.upper()
             producto = self.buscar_producto(nombre)
             if producto == None:
                 print('No hay productos en el inventario')
@@ -189,7 +185,7 @@ class Inventario():
     def mostrar_inventario(self):
         try:
             if not self.__lista:
-                print('No hay lista en inventario')
+                print('No hay productos en inventario')
             else:
                 for X in self.__lista:
                     print(X)
@@ -222,15 +218,18 @@ def main():
         if opcion == "1":
             #producto = Producto(nombre=None, categoria=None, precio=None, cantidad=None)
             try:
-                nombre = input("Nombre del producto: ")
+                nombreA = input("Nombre del producto: ")
+                nombre = nombreA.upper()
                 producto = Producto(nombre, None, None, None)
                 producto.validar_nombre()
+                # antes de continuar con la inserción, comprueba su existencia, ofreciendo su eliminación o actualización
                 X = None
                 X = inventario.existe_producto(nombre)
                 if X != None:
-                    print('Nombre de producto duplicado. ¿Actualizar o eliminar?')
+                    print(f'Producto {nombre} duplicado. ¿Actualizar o eliminar?')
                     raise ValueError('Nombre de producto duplicado. ¿Actualizar o eliminar?')
-                categoria = input("Categoría del producto: ")
+                categoriaA = input("Categoría del producto: ")
+                categoria = categoriaA.upper()
                 producto.set_categoria(categoria)
                 producto.validar_categoria()
                 try:
@@ -238,7 +237,7 @@ def main():
                     producto.set_precio(precio)
                     producto.validar_precio()
                 except:
-                    print('Debe ser númerico con o sin decimales')
+                    print('Solo números con o sin decimales ¡con .!')
                     #Volviendo a Menú
                 else:
                     try:
@@ -246,7 +245,7 @@ def main():
                         producto.set_cantidad(cantidad)
                         producto.validar_cantidad()
                     except:
-                        print('Debe ser númerico y entero')
+                        print('Debe ser "solo" números enteros')
                         #Volviendo a Menú
                     else:
                         print(producto)
@@ -257,7 +256,8 @@ def main():
 
         elif opcion == "2":
             try:
-                nombre = input("Nombre del producto a actualizar: ")
+                nombreA = input("Nombre del producto a actualizar: ")
+                nombre = nombreA.upper()
                 producto = inventario.buscar_producto(nombre)
                 if producto == False:
                     #Volviendo a Menú
@@ -267,7 +267,8 @@ def main():
                     raise ValueError('No hay lista en inventario')
                 else:
                     try:
-                        categoria = input("Mantener o modificar categoría del producto: ")
+                        categoriaA = input("Mantener o modificar categoría del producto: ")
+                        categoria = categoriaA.upper()
                         productoB = Producto(nombre, categoria, None, None)
                         productoB.validar_categoria()
                         try:
@@ -275,7 +276,7 @@ def main():
                             productoB.set_precio(precio)
                             productoB.validar_precio()
                         except:
-                            print('Debe ser númerico con o sin decimales')
+                            print('Solo números con o sin decimales ¡con .!')
                             #Volviendo a Menú
                         else:
                             try:
@@ -296,7 +297,8 @@ def main():
                 print('Volviendo a Menú')
 
         elif opcion == "3":
-            nombre = input("Nombre del producto a eliminar: ")
+            nombreA = input("Nombre del producto a eliminar: ")
+            nombre = nombreA.upper()
             inventario.eliminar_producto(nombre)
 
         elif opcion == "4":
