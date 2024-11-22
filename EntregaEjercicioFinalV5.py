@@ -1,8 +1,8 @@
-#Curso IBM SkillBuild 2024
-#Script Python
-#Vicente Medina Prados
+# Curso IBM SkillBuild 2024
+# Script Python
+# Vicente Medina Prados
 # https://github.com/Vicente-Cemad/EntregaEjercicioFinal
-#Empleando una lista - sin persistencia
+# Empleando una lista - sin persistencia
 
 class Producto():
     def __init__(self, nombre, categoria, precio, cantidad):
@@ -16,20 +16,23 @@ class Producto():
         try:
             if len(self.__nombre) <= 0:
                 print('Nombre no puede dejarse vacío')
-                raise ValueError("Nombre no válido")
+                raise ValueError("Nombre no puede dejarse vacío")
             elif self.__nombre.strip() == "":
                 print('Nombre no puede dejarse vacío')
-                raise ValueError("Nombre no válido")
+                raise ValueError("Nombre no puede dejarse vacío")
             elif self.__nombre.strip() == " ":
                 print('Nombre no puede ser blancos')
-                raise ValueError("Nombre no válido")
+                raise ValueError("Nombre no puede ser blancos")
             elif self.__nombre.isnumeric():
                 print('Nombre no puede ser numérico')
                 raise ValueError('Nombre no puede ser numérico')
+            elif not self.__nombre.strip():
+                print('Nombre no puede dejarse vacío')
+                raise ValueError("Nombre no puede dejarse vacío")  
             else:
                 print('Nombre correcto')
         except: 
-            raise ('Volviendo a Menú')
+            raise ValueError('Volviendo a Menú')
 
 
     def validar_categoria(self):
@@ -47,10 +50,13 @@ class Producto():
             elif self.__categoria.isnumeric():
                 print('Categoria no puede ser numérico')
                 raise ValueError('Categoria no puede ser numérico')
+            elif not self.__categoria.strip():
+                print('Categoria no puede dejarse vacío')
+                raise ValueError("Categoria no puede dejarse vacío")
             else:
                 print('Categoría correcta')
         except:
-            raise ('Volviendo a Menú') 
+            raise ValueError('Volviendo a Menú')
 
     def validar_precio(self):
         #Precio
@@ -61,7 +67,7 @@ class Producto():
             else:
                 print('Precio correcto')
         except:
-            raise ('Volviendo a Menú') 
+            raise ValueError('Volviendo a Menú') 
 
     def validar_cantidad(self):
         #Cantidad
@@ -72,7 +78,7 @@ class Producto():
             else:
                 print('Cantidad correcta')
         except:
-            raise ('Volviendo a Menú') 
+            raise ValueError('Volviendo a Menú') 
 
     def get_nombre(self):
         return self.__nombre

@@ -3,6 +3,8 @@
 # Vicente Medina Prados
 # https://github.com/Vicente-Cemad/EntregaEjercicioFinal
 # Empleando una lista - sin persistencia
+# Se elimina la opción de modificación de "categoria"
+# al no ser un requisito solicitado en el enunciado del proyecto
 
 class Producto():
     def __init__(self, nombre, categoria, precio, cantidad):
@@ -273,10 +275,12 @@ def main():
                     raise ValueError('No hay lista en inventario')
                 else:
                     try:
-                        categoriaA = input("Mantener o modificar categoría del producto: ")
-                        categoria = categoriaA.upper()
+                        # categoriaA = input("Mantener o modificar categoría del producto: ")
+                        # categoria = categoriaA.upper()
+                        # productoB = Producto(nombre, categoria, None, None)
+                        # productoB.validar_categoria()
+                        categoria = producto.get_categoria()
                         productoB = Producto(nombre, categoria, None, None)
-                        productoB.validar_categoria()
                         try:
                             precio = float(input("Mantener o modificar precio del producto: "))
                             productoB.set_precio(precio)
